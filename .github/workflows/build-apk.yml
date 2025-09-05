@@ -12,25 +12,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install Buildozer and Requirements
+      - name: Install and Build
         run: |
+          # Perbarui sistem
+          sudo apt-get update
+          
+          # Instal Buildozer dan pustaka pendukung
           pip install buildozer
           pip install Cython
-
-      - name: Install Android SDK Build Tools
-        run: |
+          
+          # Instal Android SDK
           yes | sdkmanager --licenses
-          sdkmanager --install "build-tools;33.0.0"
+          sdkmanager --install "build-tools;33.0.0" "platforms;android-33" "ndk;25.2.9519653"
 
-      - name: Build Kivy App
-        run: |
+          # Bangun aplikasi Kivy
           buildozer android debug
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
