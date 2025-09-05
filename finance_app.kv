@@ -1,0 +1,180 @@
+# Definisi Warna (Opsional, tapi sangat disarankan untuk konsistensi)
+# Anda bisa mengubah kode warna hex di sini
+<Color>:
+    primary: 0.13, 0.58, 0.95, 1  # Biru
+    secondary: 0.96, 0.96, 0.96, 1 # Abu-abu terang
+    accent: 1, 0.6, 0, 1 # Oranye
+    text_color: 0.2, 0.2, 0.2, 1 # Abu-abu gelap
+    light_text: 0.5, 0.5, 0.5, 1
+
+# Kustomisasi Widget
+<MyBoxLayout@BoxLayout>:
+    orientation: 'vertical'
+    padding: 20
+    spacing: 15
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<CustomButton@Button>:
+    color: 1, 1, 1, 1
+    background_color: 0.13, 0.58, 0.95, 1
+    background_normal: ''
+    background_down: ''
+    font_size: '18sp'
+    height: '48dp'
+    size_hint_y: None
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10, ]
+
+<CustomTextInput@TextInput>:
+    multiline: False
+    font_size: '16sp'
+    padding: [10, 15]
+    background_normal: ''
+    background_active: ''
+    background_color: 0.96, 0.96, 0.96, 1
+    foreground_color: 0, 0, 0, 1
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10, ]
+    on_focus: if self.focus: app.keyboard_open(self)
+
+<CustomLabel@Label>:
+    color: 0.2, 0.2, 0.2, 1
+    font_size: '16sp'
+    text_size: self.size
+    valign: 'middle'
+    halign: 'left'
+
+<CustomSpinner@Spinner>:
+    font_size: '16sp'
+    height: '48dp'
+    size_hint_y: None
+    color: 0.2, 0.2, 0.2, 1
+    background_normal: ''
+    background_down: ''
+    background_color: 0.96, 0.96, 0.96, 1
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10, ]
+    # Teks di dalam spinner
+    text_size: self.size
+    valign: 'middle'
+    halign: 'left'
+    padding: [10, 0]
+
+BoxLayout:
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    TabbedPanel:
+        do_default_tab: False
+        tab_pos: 'top_mid'
+        tab_height: '50dp'
+        background_color: 0.96, 0.96, 0.96, 1
+        tab_strip_height: 50
+        border: [0,0,0,0]
+
+        TabbedPanelItem:
+            text: 'Dashboard'
+            font_size: '16sp'
+            MyBoxLayout:
+                Label:
+                    text: 'Ringkasan Keuangan'
+                    font_size: '22sp'
+                    color: 0.13, 0.58, 0.95, 1
+                    size_hint_y: None
+                    height: '40dp'
+                CustomLabel:
+                    id: total_income_label
+                    text: 'Total Pemasukan: Rp.0'
+                CustomLabel:
+                    id: total_expense_label
+                    text: 'Total Pengeluaran: Rp.0'
+                CustomLabel:
+                    id: balance_label
+                    text: 'Saldo: Rp.0'
+
+        TabbedPanelItem:
+            text: 'Input'
+            font_size: '16sp'
+            MyBoxLayout:
+                CustomLabel:
+                    text: 'Jenis Transaksi'
+                CustomSpinner:
+                    id: transaction_type_spinner
+                    text: 'Pilih'
+                    values: ['Pemasukan', 'Pengeluaran']
+                CustomLabel:
+                    text: 'Jumlah'
+                CustomTextInput:
+                    id: amount_input
+                    input_type: 'number'
+                CustomLabel:
+                    text: 'Deskripsi'
+                CustomTextInput:
+                    id: desc_input
+                CustomButton:
+                    text: 'Simpan'
+                    on_release: app.add_transaction()
+
+        TabbedPanelItem:
+            text: 'Utang'
+            font_size: '16sp'
+            MyBoxLayout:
+                Label:
+                    text: 'Tambah Utang'
+                    font_size: '18sp'
+                    color: 0.13, 0.58, 0.95, 1
+                    size_hint_y: None
+                    height: '30dp'
+
+                BoxLayout:
+                    spacing: 10
+                    CustomTextInput:
+                        id: debt_person_input
+                        hint_text: 'Nama Peminjam'
+                    CustomTextInput:
+                        id: debt_amount_input
+                        hint_text: 'Jumlah'
+                        input_type: 'number'
+                CustomButton:
+                    text: 'Tambah Utang'
+                    on_release: app.add_debt()
+                
+                Label:
+                    text: 'Daftar Utang'
+                    font_size: '18sp'
+                    color: 0.13, 0.58, 0.95, 1
+                    size_hint_y: None
+                    height: '30dp'
+                
+                ScrollView:
+                    GridLayout:
+                        id: debt_list
+                        cols: 1
+                        spacing: 10
+                        size_hint_y: None
+                        height: self.minimum_height
