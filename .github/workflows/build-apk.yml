@@ -17,15 +17,17 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 33
+          ndk: 25.2.9519653
+          build-tools: 33.0.0
+      
       - name: Install Buildozer and Requirements
         run: |
           pip install buildozer
           pip install Cython
-
-      - name: Install Android SDK Build Tools
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager --install "build-tools;33.0.0"
 
       - name: Build Kivy App
         run: |
